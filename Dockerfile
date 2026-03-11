@@ -1,7 +1,7 @@
 FROM alpine:3.18.12
 
 COPY ALGOL60_* /tmp/
-RUN apk add git make wget unzip gcc musl-dev && \
+RUN apk add --no-cache git make wget unzip gcc musl-dev && \
     cd /tmp && \
     wget https://www.algol60.org/translators/algol-60-compiler.zip && \
     unzip algol-60-compiler.zip && \
