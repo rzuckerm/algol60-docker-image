@@ -1,17 +1,16 @@
-FROM alpine:3.18.12
+FROM alpine:3.23.3
 
 COPY ALGOL60_* *.patch /tmp/
-RUN apk add --no-cache make wget unzip patch gcc musl-dev && \
+RUN VERSION=$(cat /tmp/ALGOL60_VERSION) && \
+    apk add --no-cache make wget gzip gcc musl-dev && \
     cd /tmp && \
-    wget https://www.algol60.org/translators/algol-60-compiler.zip && \
-    unzip algol-60-compiler.zip && \
-    rm -f algol-60-compiler.zip && \
-    cd algol-60-compiler && \
-    patch -p0 < /tmp/runtime.c.patch && \
-    rm -f /tmp/runtime.c.patch && \
+    wget https://ftp.gnu.org/gnu/marst/${VERSION}.tar.gz && \
+    tar xzf  ${VERSION}.tar.gz && \
+    rm -f ${VERSION}.tar.gz && \
+    cd ${VERSION}/ && \
     ./configure && \
     make && \
     make install && \
     cd / && \
-    rm -rf algol-60-compiler && \
-    apk del make wget unzip patch
+    rm -rf ${VERSION}/ && \
+    apk del make wget gzip
